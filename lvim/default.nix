@@ -2,11 +2,11 @@
 
 {
   home.packages = with pkgs; [
-    wezterm
+    lunarvim
   ];
 
-  home.file.".config/wezterm" = {
-    source = ./wezterm;
+  home.file.".config/lvim" = {
+    source = ./lvim;
     recursive = true;
   };
 }

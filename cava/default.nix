@@ -2,11 +2,11 @@
 
 {
   home.packages = with pkgs; [
-    wezterm
+    cava
   ];
 
-  home.file.".config/wezterm" = {
-    source = ./wezterm;
+  home.file.".config/cava" = {
+    source = ./cava;
     recursive = true;
   };
 }

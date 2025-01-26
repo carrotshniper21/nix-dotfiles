@@ -2,11 +2,11 @@
 
 {
   home.packages = with pkgs; [
-    wezterm
+    neofetch
   ];
 
-  home.file.".config/wezterm" = {
-    source = ./wezterm;
+  home.file.".config/neofetch" = {
+    source = ./neofetch;
     recursive = true;
   };
 }

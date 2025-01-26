@@ -2,11 +2,11 @@
 
 {
   home.packages = with pkgs; [
-    wezterm
+    ranger
   ];
 
-  home.file.".config/wezterm" = {
-    source = ./wezterm;
+  home.file.".config/ranger" = {
+    source = ./ranger;
     recursive = true;
   };
 }

@@ -2,11 +2,11 @@
 
 {
   home.packages = with pkgs; [
-    wezterm
+    skippy-xd
   ];
 
-  home.file.".config/wezterm" = {
-    source = ./wezterm;
+  home.file.".config/skippy-xd" = {
+    source = ./skippy-xd;
     recursive = true;
   };
 }

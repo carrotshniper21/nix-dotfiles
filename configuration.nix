@@ -2,35 +2,41 @@
 # your system.  Help is available in the configuration.nix(5) man page
 # and in the NixOS manual (accessible by running ‘nixos-help’).
 
-{ config, pkgs, flake-self, ... }:
+{ config, pkgs, flake-self, lib, ... }:
 
 {
   imports =
-    [ # Include the results of the hardware scan.
+    [
+      # Include the results of the hardware scan.
       ./hardware-configuration.nix
     ];
 
   nix = {
-	nixPath = [ "nixpkgs=${flake-self.inputs.nixpkgs}" ];
-	package = pkgs.nixVersions.stable;
-	extraOptions = ''
-		fallback = true
-		connect-timeout = 10	
-		log-lines = 25
-	'';
-	settings = {
-		trusted-users = [ "root" "@wheel"];
-		experimental-features = [
-			"nix-command"
-			"flakes"
-		];
-	};
+    nixPath = [ "nixpkgs=${flake-self.inputs.nixpkgs}" ];
+    package = pkgs.nixVersions.stable;
+    extraOptions = ''
+      		fallback = true
+      		connect-timeout = 10	
+      		log-lines = 25
+      	'';
+    settings = {
+      trusted-users = [ "root" "@wheel" ];
+      experimental-features = [
+        "nix-command"
+        "flakes"
+      ];
+    };
   };
 
   # Bootloader.
+  boot.loader.systemd-boot.enable = false;
   boot.loader.grub.enable = true;
-  boot.loader.grub.device = "/dev/sda";
+  boot.loader.grub.device = "nodev";
+  boot.loader.grub.efiSupport = true;
   boot.loader.grub.useOSProber = true;
+  boot.loader.grub.theme = ./tartarus;
+  boot.loader.efi.canTouchEfiVariables = true;
+  boot.loader.efi.efiSysMountPoint = "/boot";
 
   networking.hostName = "nixos"; # Define your hostname.
   # networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
@@ -39,8 +45,14 @@
   # networking.proxy.default = "http://user:password@proxy:port/";
   # networking.proxy.noProxy = "127.0.0.1,localhost,internal.domain";
 
-  # Enable networking
   networking.networkmanager.enable = true;
+
+  # Enable networking
+  # networking.wireless = {
+  #   enable = true;
+  #   networks.Newlyfe.psk = "Schoolyard22?";
+  #   userControlled.enable = true;
+  # };
 
   # Set your time zone.
   time.timeZone = "America/Chicago";
@@ -60,10 +72,11 @@
     LC_TIME = "en_US.UTF-8";
   };
 
-  
+
   fonts.packages = with pkgs; [
     nerd-fonts.iosevka
     nerd-fonts.fira-code
+    nerd-fonts.roboto-mono
   ];
 
   home-manager.useGlobalPkgs = true;
@@ -71,8 +84,8 @@
   home-manager.useUserPackages = true;
   home-manager = {
     extraSpecialArgs = {
-       inherit flake-self;
-       system-config = config;
+      inherit flake-self;
+      system-config = config;
     };
   };
 
@@ -81,7 +94,7 @@
     isNormalUser = true;
     description = "nerds";
     extraGroups = [ "networkmanager" "wheel" ];
-    packages = with pkgs; [];
+    shell = pkgs.zsh;
   };
 
   # Allow unfree packages
@@ -90,8 +103,8 @@
   # List packages installed in system profile. To search, run:
   # $ nix search wget
   environment.systemPackages = with pkgs; [
-  #  vim # Do not forget to add an editor to edit configuration.nix! The Nano editor is also installed by default.
-  #  wget
+    #  vim # Do not forget to add an editor to edit configuration.nix! The Nano editor is also installed by default.
+    #  wget
   ];
 
   # Some programs need SUID wrappers, can be configured further or are
@@ -101,6 +114,10 @@
   #   enable = true;
   #   enableSSHSupport = true;
   # };
+
+  programs.thunar.enable = true;
+
+  programs.zsh.enable = true;
 
   # List services that you want to enable:
   services.pipewire = {
@@ -115,6 +132,7 @@
   };
   services.xserver.enable = true;
   services.displayManager.sddm.enable = true;
+
 
   # Configure keymap in X11
   services.xserver.xkb = {
