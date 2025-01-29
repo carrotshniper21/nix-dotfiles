@@ -24,6 +24,7 @@ in
 
   home.packages = with pkgs; [
     dwmBlocks
+    virtualbox
     pulseaudio
     pamixer
     pavucontrol
@@ -41,6 +42,7 @@ in
     libnotify
     acpi
     wirelesstools
+    torrential
   ];
 
   programs.zsh = {
@@ -523,7 +525,6 @@ in
       ExecStart = "${lib.getExe dwmBlocks}";
       Restart = "on-failure";
       RestartSec = 3;
-      WantedBy = "default.target";
     };
   };
 }
